@@ -1,0 +1,16 @@
+#!/bin/bash
+#同步 生产环境中的Jenkins_home_new到 28服务器下的 /app目录下
+
+date>>/app/tools/synclog/jenkins_home_`date +%Y-%m-%d`.log  #记录此时的时间
+
+##/app/tools/exclude.list  记录需要排除的内容
+/usr/bin/sshpass -p '*************' rsync -aqz  -e ssh --delete  --exclude-from=/app/tools/exclude.list  /data/jenkins_home_new  168.61.17.77:/app/  >>/app/tools/synclog/jenkins_home_`date +%Y-%m-%d`.log
+##也可以使用这样的方式排除不需要同步的数据
+##sshpass -p '*********' rsync -aqz  -e ssh --delete  --exclude '.jira-home.lock' --exclude 'caches' --exclude 'export' appadmin@168.61.1.109:/app/jira_home  /app >> /app/synclog/`date +%Y-%m-%d`.log
+
+date >>/app/tools/synclog/jenkins_home_`date +%Y-%m-%d`.log #记录同步完成的时间
+
+echo "done"  >>/app/tools/synclog/jenkins_home_`date +%Y-%m-%d`.log
+
+
+
